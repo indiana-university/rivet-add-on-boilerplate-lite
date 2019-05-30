@@ -17,6 +17,6 @@
     "browser-sync": "^2.26.5",
     "gulp": "^4.0.0",
     "gulp-sass": "^4.0.2",
-    "rivet-uits": "^1.3.0"
+    "rivet-uits": "^1.6.0"
   }
 }
