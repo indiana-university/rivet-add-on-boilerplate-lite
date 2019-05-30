@@ -66,7 +66,7 @@ function compileHTML() {
  */
 
 function buildSass() {
-  src(["src/sass/**/*.scss", "!src/sass/code-snippet-styling.scss"])
+  return src(["src/sass/**/*.scss", "!src/sass/code-snippet-styling.scss"])
     .pipe(sass({ outputStyle: "expanded" }).on("error", sass.logError))
     .pipe(dest("dist/css/"));
 }
@@ -82,7 +82,7 @@ function lintJSBuild() {
 }
 
 function buildJS() {
-  src("src/js/**/*.js")
+  return src("src/js/**/*.js")
     .pipe(dest("dist/js/"));
 }
 
