@@ -8,6 +8,7 @@
  * and any references to it in index.html.
  */
 
+// eslint-disable-next-line no-unused-vars
 const MyComponent = (function() {
   
   'use strict';
@@ -46,6 +47,7 @@ const MyComponent = (function() {
     alert('Button clicked!');
   }
 
+  // eslint-disable-next-line no-unused-vars
   const somePrivateMethod = function() {
     // Do something useful.
   }
@@ -66,7 +68,7 @@ const MyComponent = (function() {
     });
   };
 
-  Constructor.prototype.somePublicMethod = function(arg1, arg2, etc) {
+  Constructor.prototype.somePublicMethod = function() {
     // Do something useful.
   }
 

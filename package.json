@@ -15,7 +15,9 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "browser-sync": "^2.26.5",
+    "eslint-config-rivet": "^1.0.0",
     "gulp": "^4.0.0",
+    "gulp-eslint": "^5.0.0",
     "gulp-sass": "^4.0.2",
     "rivet-uits": "^1.6.0"
   }
