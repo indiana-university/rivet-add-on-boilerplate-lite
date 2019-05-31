@@ -1,6 +1,7 @@
-const { src, dest, watch } = require("gulp");
-const sass = require("gulp-sass");
+const { series, src, dest, watch } = require("gulp");
 const browserSync = require("browser-sync").create();
+const eslint = require("gulp-eslint");
+const sass = require("gulp-sass");
 
 /**
  * Starts the local development server, using /docs as the base directory.
@@ -16,7 +17,7 @@ function startDevServer(callback) {
   });
 
   watch("src/sass/**/*.scss", { ignoreInitial: false }, compileSass);
-  watch("src/js/**/*.js", { ignoreInitial: false }, compileJS);
+  watch("src/js/**/*.js", { ignoreInitial: false }, series(lintJSWatch, compileJS));
   watch("src/index.html", { ignoreInitial: false }, compileHTML);
   
   callback();
@@ -34,9 +35,14 @@ function compileSass() {
 }
 
 /**
- * Compiles JavaScript files to /docs/js for use by the local 
+ * Lints and compiles JavaScript files to /docs/js for use by the local 
  * development server.
  */
+function lintJSWatch() {
+  return src(["src/js/**/*.js", "!node_modules/**"])
+    .pipe(eslint())
+    .pipe(eslint.format());
+}
 
 function compileJS() {
   return src("src/js/**/*.js")
@@ -56,26 +62,11 @@ function compileHTML() {
 }
 
 /**
- * Builds the distributable add-on CSS and JavaScript to /dist. This process
- * does not include any HTML or CSS used to render the add-on's documentation;
- * it only builds out the source files necessary for someone to use the add-on
- * in their own application.
- *
- * Running `gulp build` builds the CSS and JavaScript.
- */
-
-function build(callback) {
-  buildSass();
-  buildJs();
-  callback();
-}
-
-/**
  * Builds Sass files to /dist/css for distribution.
  */
 
 function buildSass() {
-  src(["src/sass/**/*.scss", "!src/sass/code-snippet-styling.scss"])
+  return src(["src/sass/**/*.scss", "!src/sass/code-snippet-styling.scss"])
     .pipe(sass({ outputStyle: "expanded" }).on("error", sass.logError))
     .pipe(dest("dist/css/"));
 }
@@ -83,11 +74,17 @@ function buildSass() {
 /**
  * Builds JavaScript files to /dist/js for distribution.
  */
+function lintJSBuild() {
+  return src(["src/js/**/*.js", "!node_modules/**"])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+}
 
-function buildJs() {
-  src("src/js/**/*.js")
+function buildJS() {
+  return src("src/js/**/*.js")
     .pipe(dest("dist/js/"));
 }
 
 exports.default = startDevServer;
-exports.build = build;
+exports.build = series(buildSass, lintJSBuild, buildJS);
